@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fall_detection_real/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -16,6 +18,7 @@ class FirestoreOperations {
     await _firebaseMessaging.requestPermission();
 
     //fetch FCM token for the device
+    // ignore: non_constant_identifier_names
     final FCMToken = await _firebaseMessaging.getToken();
     print("Token: $FCMToken");
 
