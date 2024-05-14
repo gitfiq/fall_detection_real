@@ -1,3 +1,3 @@
-# fall_detection_real
+# fall_detection_real (Major Project)
 
-A new Flutter project.
+A Flutter Project that is created to provide the user appropirate user interface for the Silver Shield mobile application
