@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "615856094078",
+    "project_id": "falldetection-f3724",
+    "storage_bucket": "falldetection-f3724.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615856094078:android:6174703259b9bd3716d12f",
+        "android_client_info": {
+          "package_name": "com.example.fall_detection_real"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDS5VzBPaOL327YkiJSE2ZFcdPstCOBnSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
