@@ -6,26 +6,29 @@ class MenuTile extends StatelessWidget {
   final String title;
   final String subtitile;
   final Widget destination; // Destination page widget
+  final VoidCallback? onTap; // Add this line
 
   const MenuTile(
       {super.key,
       required this.icon,
       required this.title,
       required this.subtitile,
-      required this.destination});
+      required this.destination,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: GestureDetector(
-        onTap: () {
-          // Navigate to a new page when the container is tapped
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => destination),
-          );
-        },
+        onTap: onTap ??
+            () {
+              // Navigate to a new page when the container is tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => destination),
+              );
+            },
         child: Container(
             decoration: BoxDecoration(
               color: Colors.white,

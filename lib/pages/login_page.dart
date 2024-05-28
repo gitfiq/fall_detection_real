@@ -1,6 +1,11 @@
+// ignore_for_file: unused_import, avoid_print
+
+import 'package:fall_detection_real/services/call_back_service.dart';
 import 'package:fall_detection_real/services/firestore_operations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:workmanager/workmanager.dart';
 import '../data/user_id.dart';
 
 class LoginPage extends StatefulWidget {
@@ -122,12 +127,11 @@ class _LoginPageState extends State<LoginPage>
 
                                 // Check if the document exists
                                 if (documentSnapshot.exists) {
-                                  //initialize the notification
-                                  await FirestoreOperations()
-                                      .initNotifications(deviceId);
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.pushNamed(context, '/homepage',
-                                      arguments: userInput);
+                                  // await FirestoreOperations()
+                                  //     .updateFcmToken(deviceId);
+
+                                  await _authenticateAndInitialize(
+                                      deviceId, userInput);
                                 } else {
                                   showDialog(
                                     // ignore: use_build_context_synchronously
@@ -166,7 +170,6 @@ class _LoginPageState extends State<LoginPage>
                                 }
                               } catch (e) {
                                 // Handle any errors
-                                // ignore: avoid_print
                                 print("Error retrieving document: $e");
                               }
                             } else {
@@ -199,6 +202,27 @@ class _LoginPageState extends State<LoginPage>
         ),
       ),
     );
+  }
+
+  Future<void> _authenticateAndInitialize(
+      String deviceId, UserId userInput) async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: "123456abcdef@gmail.com",
+        password: "fedcba654321",
+      );
+
+      if (userCredential.user != null) {
+        await FirestoreOperations().initNotifications(deviceId);
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, '/homepage', arguments: userInput);
+      }
+    } catch (e) {
+      print("Authentication failed: $e");
+      print(
+          "Authentication Failed. Unable to authenticate with the default email and password.");
+    }
   }
 
   @override

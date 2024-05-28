@@ -1,4 +1,5 @@
-// ignore: unused_import
+// ignore_for_file: avoid_print, unused_import
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fall_detection_real/data/user_id.dart';
 import 'package:fall_detection_real/firebase_options.dart';
@@ -7,6 +8,7 @@ import 'package:fall_detection_real/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -19,6 +21,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Request notification permissions
+  await requestNotificationPermissions();
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -48,4 +52,21 @@ Future<void> main() async {
       },
     ),
   );
+}
+
+Future<void> requestNotificationPermissions() async {
+  // Check if notification permissions are granted
+  PermissionStatus permissionStatus = await Permission.notification.status;
+
+  // If permissions are not granted, request them
+  if (!permissionStatus.isGranted) {
+    PermissionStatus status = await Permission.notification.request();
+
+    // If permission is denied, show a dialog or handle it appropriately
+    if (status != PermissionStatus.granted) {
+      // Handle the case where permission is not granted
+      print('Notification permission denied');
+      // Optionally, show a dialog to inform the user
+    }
+  }
 }

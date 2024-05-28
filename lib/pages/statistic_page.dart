@@ -90,7 +90,7 @@ class _StatisticPageState extends State<StatisticPage> {
 
   Widget _buildLineChartOrMessage() {
     // ignore: prefer_is_empty
-    if (sensorDataPoints.length < 1) {
+    if (sensorDataPoints.length < 2) {
       // Render the message widget in a rounded container
       return Container(
         width: MediaQuery.of(context).size.width * 0.8,
@@ -223,7 +223,7 @@ class _StatisticPageState extends State<StatisticPage> {
             height: MediaQuery.of(context).size.height * 0.1, // Top quarter
             child: const Center(
               child: Text(
-                'Activity page',
+                'Activity Level Page',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,

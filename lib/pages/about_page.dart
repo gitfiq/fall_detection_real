@@ -51,7 +51,7 @@ class _AboutPageState extends State<AboutPage> {
                 AboutTile(
                     title: "About Us",
                     body:
-                        "Afiq, Jovan and Javier. The creator of the Silver Shiled. Silver Shiled is created for families in Singapore to monitor their elderlies when they are away from home."),
+                        "Afiq, Jovan and Javier. The creator of the Silver Shiled. Silver Shiled is created for families in Singapore to monitor their elderlies when they are away from home. \n\nNOTE: Allow this application to run in the background. Do not terminate the application as notification of a fall detected will not be shown if application is terminated"),
                 AboutTile(
                     title: "Current Status",
                     body:
@@ -61,9 +61,13 @@ class _AboutPageState extends State<AboutPage> {
                     body:
                         "All previous fall detected are stored in the 'Fall History Page'. This page is mainly use for viewing past falls and can be used for medical analysis with doctors. You are also able to delete certain fall history if you see that the fall detected was a false alarm. \n\nInformation that are available in the 'Fall History Page' are: \n. TIME of the fall and \n. LOCATION where the fall occured"),
                 AboutTile(
-                    title: "Statistics",
+                    title: "Activity Level",
                     body:
-                        "You can check the movements of the user in the 'Active Level Page'. In this page there would be two graphs showng the rotation and movement of the user. Do use this page to check on the user if a fall is detected. \n\n NOTE: If a fall is detected and no movements are shown, a fall has most likely occured. If movements are shown, a fall may not have occured. Do contact them to check on their status and call an ambulance if needed."),
+                        "You can check the movements of the user in the 'Active Level Page'. In this page there would be two graphs showng the rotation and movement of the user. Do use this page to check on the user if a fall is detected. \n\n NOTE: If a fall is detected and no movements are shown, a fall has most likely occured. If movements are shown, a fall may not have occured. However still do contact them to check on their status and call an ambulance if necessary."),
+                AboutTile(
+                    title: "Set Name",
+                    body:
+                        "You can assign a name to the device in the 'Set Name Page'. In this page you can assign the a name to the device which will be used for notification purposes. This is to allow better clarification of who's device has detected a fall. For example, if you own two devices and is used for two seperate people, if a fall is detected for the device you will be notified of a fall detected with the name you have set in this page. \n\n NOTE: If no names have been set, the device ID will be used as an identifier for the fall detected notification."),
               ],
             ),
           ),
@@ -73,7 +77,7 @@ class _AboutPageState extends State<AboutPage> {
             width: MediaQuery.of(context).size.width * 0.80,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/homepage',
+                Navigator.pushReplacementNamed(context, '/homepage',
                     arguments: widget.userId);
               },
               style: ElevatedButton.styleFrom(
