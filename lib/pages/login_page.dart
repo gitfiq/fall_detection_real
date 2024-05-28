@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, avoid_print
+// ignore_for_file: unused_import, avoid_print, use_build_context_synchronously
 
 import 'package:fall_detection_real/services/call_back_service.dart';
 import 'package:fall_detection_real/services/firestore_operations.dart';
@@ -31,6 +31,22 @@ class _LoginPageState extends State<LoginPage>
   late final Animation<double> _borderRadiusAnimation =
       Tween<double>(begin: 20.0, end: 5.0) // Adjust radius as needed
           .animate(_controller);
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  void _dismissLoadingDialog(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
 
   @override
   void dispose() {
@@ -116,6 +132,10 @@ class _LoginPageState extends State<LoginPage>
                               // Create an instance of UserInput and pass the device ID
                               // ignore: unused_local_variable
                               UserId userInput = UserId(deviceId);
+
+                              // Show loading dialog
+                              _showLoadingDialog(context);
+
                               try {
                                 // Retrieve the document from Firestore
                                 DocumentSnapshot documentSnapshot =
@@ -133,8 +153,10 @@ class _LoginPageState extends State<LoginPage>
                                   await _authenticateAndInitialize(
                                       deviceId, userInput);
                                 } else {
+                                  // Dismiss loading dialog
+                                  _dismissLoadingDialog(context);
+
                                   showDialog(
-                                    // ignore: use_build_context_synchronously
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
@@ -171,6 +193,8 @@ class _LoginPageState extends State<LoginPage>
                               } catch (e) {
                                 // Handle any errors
                                 print("Error retrieving document: $e");
+                                // Dismiss loading dialog
+                                _dismissLoadingDialog(context);
                               }
                             } else {
                               // Form is not valid, show snackbar to enter a device ID
@@ -215,7 +239,8 @@ class _LoginPageState extends State<LoginPage>
 
       if (userCredential.user != null) {
         await FirestoreOperations().initNotifications(deviceId);
-        // ignore: use_build_context_synchronously
+        // Dismiss loading dialog
+        _dismissLoadingDialog(context);
         Navigator.pushNamed(context, '/homepage', arguments: userInput);
       }
     } catch (e) {

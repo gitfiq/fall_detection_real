@@ -67,7 +67,7 @@ class _AboutPageState extends State<AboutPage> {
                 AboutTile(
                     title: "Set Name",
                     body:
-                        "You can assign a name to the device in the 'Set Name Page'. In this page you can assign the a name to the device which will be used for notification purposes. This is to allow better clarification of who's device has detected a fall. For example, if you own two devices and is used for two seperate people, if a fall is detected for the device you will be notified of a fall detected with the name you have set in this page. \n\n NOTE: If no names have been set, the device ID will be used as an identifier for the fall detected notification."),
+                        "You can assign a name to the device in the 'Set Name Page'. In this page you can assign the a name to the device which will be used for notification purposes. This is to allow better clarification of who's device has detected a fall. \n\n NOTE: If no names have been set, the device ID will be used as an identifier for the fall detected notification."),
               ],
             ),
           ),
