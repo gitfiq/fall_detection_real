@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fall_detection_real/data/user_id.dart';
 import 'package:fall_detection_real/pages/current_status_page.dart';
 import 'package:fall_detection_real/pages/fall_history_page.dart';
@@ -20,9 +22,23 @@ class _StatisticPageState extends State<StatisticPage> {
   final List<SensorDataPoint> sensorDataPoints =
       []; // List to store data points
   bool _isStreamActive = false; // Flag to track stream status
+  late StreamSubscription
+      _sensorDataSubscription; // StreamSubscription to manage stream
+
+  @override
+  void initState() {
+    super.initState();
+    _listenToSensorData();
+  }
+
+  @override
+  void dispose() {
+    _sensorDataSubscription.cancel(); // Cancel the stream subscription
+    super.dispose();
+  }
 
   void _listenToSensorData() {
-    _firestoreService.getSensorDataStream(widget.deviceId).listen((snapshot) {
+    _firestoreService.getUserStream(widget.deviceId).listen((snapshot) {
       if (snapshot.exists) {
         final data = snapshot.data()!;
         final newPoint = SensorDataPoint(
@@ -34,7 +50,7 @@ class _StatisticPageState extends State<StatisticPage> {
         // Update the list (add new, remove old if needed)
         setState(() {
           sensorDataPoints.add(newPoint);
-          if (sensorDataPoints.length > 10) {
+          if (sensorDataPoints.length >= 11) {
             sensorDataPoints.removeAt(0); // Remove oldest point
           }
         });
@@ -45,28 +61,36 @@ class _StatisticPageState extends State<StatisticPage> {
 
   //Gets the gyrometer values against the time
   List<FlSpot> _getgyrometerChartData(List<SensorDataPoint> dataPoints) {
-    return dataPoints
-        .map((point) => FlSpot(
-            (point.time.hour * 3600 +
-                point.time.minute * 60 +
-                point.time.second) as double,
-            point.gyrometer))
-        .toList();
+    return dataPoints.map((point) {
+      double xValue = point.time.millisecondsSinceEpoch.toDouble();
+      return FlSpot(xValue, point.gyrometer.toDouble());
+    }).toList();
   }
 
   //Gets the accelerometer values against the time
   List<FlSpot> _getaccelerometerChartData(List<SensorDataPoint> dataPoints) {
-    return dataPoints
-        .map((point) => FlSpot(
-            (point.time.hour * 3600 +
-                point.time.minute * 60 +
-                point.time.second) as double,
-            point.accelerometer))
-        .toList();
+    return dataPoints.map((point) {
+      double xValue = point.time.millisecondsSinceEpoch.toDouble();
+      return FlSpot(xValue, point.accelerometer.toDouble());
+    }).toList();
+  }
+
+  SideTitles getBottomTitles() {
+    return SideTitles(
+      showTitles: true,
+      reservedSize: 20,
+      interval: 60000, // Show label for each minute
+      getTitlesWidget: (value, meta) {
+        DateTime date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+        String formattedTime = "${date.hour}:${date.minute}:${date.second}";
+        return Text(formattedTime, style: const TextStyle(fontSize: 10));
+      },
+    );
   }
 
   Widget _buildLineChartOrMessage() {
-    if (sensorDataPoints.length < 10) {
+    // ignore: prefer_is_empty
+    if (sensorDataPoints.length < 1) {
       // Render the message widget in a rounded container
       return Container(
         width: MediaQuery.of(context).size.width * 0.8,
@@ -108,30 +132,32 @@ class _StatisticPageState extends State<StatisticPage> {
                   padding: const EdgeInsets.all(12.0),
                   child: LineChart(
                     LineChartData(
+                      minY: 0,
+                      maxY: 0.5,
                       lineBarsData: [
                         LineChartBarData(
-                          spots: gyrometerChartData,
-                          isCurved: true,
-                          barWidth: 15,
-                          color: Colors.blue,
-                        )
+                            spots: gyrometerChartData,
+                            isCurved: true,
+                            barWidth: 3,
+                            color: Colors.green,
+                            preventCurveOverShooting: true,
+                            dotData: const FlDotData(
+                              show: true,
+                            )),
                       ],
-                      titlesData: const FlTitlesData(
-                          topTitles: AxisTitles(
+                      titlesData: FlTitlesData(
+                          topTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
-                          rightTitles: AxisTitles(
+                          rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false)),
-                          leftTitles: AxisTitles(
+                          leftTitles: const AxisTitles(
                             axisNameWidget: Text("Gyrometer Values (degree/s)"),
                             sideTitles: SideTitles(showTitles: true),
                           ),
                           bottomTitles: AxisTitles(
-                            axisNameWidget: Text("Time"),
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 30,
-                            ),
+                            axisNameWidget: const Text("Time"),
+                            sideTitles: getBottomTitles(),
                           )),
                     ),
                   ),
@@ -147,31 +173,33 @@ class _StatisticPageState extends State<StatisticPage> {
                   padding: const EdgeInsets.all(12.0),
                   child: LineChart(
                     LineChartData(
+                      minY: 0,
+                      maxY: 0.5,
                       lineBarsData: [
                         LineChartBarData(
-                          spots: accelerometerChartData,
-                          isCurved: true,
-                          barWidth: 15,
-                          color: Colors.blue,
-                        ),
+                            spots: accelerometerChartData,
+                            isCurved: true,
+                            barWidth: 3,
+                            color: Colors.blue,
+                            preventCurveOverShooting: true,
+                            dotData: const FlDotData(
+                              show: true,
+                            )),
                       ],
-                      titlesData: const FlTitlesData(
-                          topTitles: AxisTitles(
+                      titlesData: FlTitlesData(
+                          topTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
-                          rightTitles: AxisTitles(
+                          rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false)),
-                          leftTitles: AxisTitles(
+                          leftTitles: const AxisTitles(
                             axisNameWidget:
                                 Text("Accelerometer Values (m/s^2)"),
                             sideTitles: SideTitles(showTitles: true),
                           ),
                           bottomTitles: AxisTitles(
-                            axisNameWidget: Text("Time"),
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 30,
-                            ),
+                            axisNameWidget: const Text("Time"),
+                            sideTitles: getBottomTitles(),
                           )),
                     ),
                   ),
@@ -195,7 +223,7 @@ class _StatisticPageState extends State<StatisticPage> {
             height: MediaQuery.of(context).size.height * 0.1, // Top quarter
             child: const Center(
               child: Text(
-                'Statistic page',
+                'Activity page',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,

@@ -24,7 +24,7 @@ class _CurrentStatusPageState extends State<CurrentStatusPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-          stream: _firestoreService.getCurrentStatusStream(widget.deviceId),
+          stream: _firestoreService.getUserStream(widget.deviceId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(

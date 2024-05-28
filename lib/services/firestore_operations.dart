@@ -78,45 +78,24 @@ class FirestoreOperations {
   //Stream all the Fall History data from Firestore
   Stream<QuerySnapshot> getFallDocumentsStream(String deviceId) {
     return FirebaseFirestore.instance
-        .collection('users')
-        .doc(deviceId)
-        .collection('about')
-        .doc('fall history')
-        .collection('fall')
+        .collection(deviceId)
         .orderBy('time', descending: true)
         .snapshots();
   }
 
-  //Stream the document containing the Current Status of the user from Firestore
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getCurrentStatusStream(
+  //Stream the document containing the Overall Status of the user from Firestore
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStream(
       String deviceId) {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(deviceId)
-        .collection('about')
-        .doc('fall indication')
-        .snapshots();
-  }
-
-  //Stream the document containing the Sensor Data from Firestore
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getSensorDataStream(
-      String deviceId) {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(deviceId)
-        .collection('about')
-        .doc('sensor data')
         .snapshots();
   }
 
   Future<void> deleteFallDocument(String deviceId, String documentId) async {
     try {
       await FirebaseFirestore.instance
-          .collection('users')
-          .doc(deviceId)
-          .collection('about')
-          .doc('fall history')
-          .collection('fall')
+          .collection(deviceId)
           .doc(documentId)
           .delete();
     } catch (error) {
