@@ -19,26 +19,28 @@ class AboutTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
           color: Colors.grey[800],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 28.0,
-                fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 28.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 40.0),
-            Text(
-              body,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14.0,
+              const SizedBox(height: 40.0),
+              Text(
+                body,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

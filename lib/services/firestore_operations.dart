@@ -50,28 +50,37 @@ class FirestoreOperations {
   }
 
   void startListeningForFallStatusChanges(String deviceId) {
+    bool previousFallStatus = false; // Variable to store previous fall_status
+
     users.doc(deviceId).snapshots().listen((snapshot) {
       if (snapshot.exists) {
         var data = snapshot.data() as Map<String, dynamic>?;
-        if (data != null && data['fall_status'] == true) {
-          // Read username from Firestore
-          users.doc(deviceId).get().then((userDoc) {
-            if (userDoc.exists) {
-              String username = userDoc.get('username');
+        if (data != null) {
+          bool currentFallStatus = data['fall_status'] ?? false;
+          if (currentFallStatus && !previousFallStatus) {
+            users.doc(deviceId).get().then((userDoc) {
+              if (userDoc.exists) {
+                String username = userDoc.get('username');
 
-              // Show local notification
-              //Checks if user puts a username already or not
-              if (username.isEmpty) {
-                //Show notification with deviceID
-                showNotification('Fall Detected',
-                    'A fall has been detected for device ID $deviceId');
-              } else {
-                //Show notification with username
-                showNotification(
-                    'Fall Detected', 'A fall has been detected for $username');
+                // Show local notification
+                //Checks if user puts a username already or not
+                if (username.isEmpty) {
+                  //Show notification with deviceID
+                  showNotification('Fall Detected',
+                      'A fall has been detected for device ID $deviceId');
+                } else {
+                  //Show notification with username
+                  showNotification('Fall Detected',
+                      'A fall has been detected for $username');
+                }
               }
-            }
-          });
+            });
+            // Update previous fall status after showing the notification
+            previousFallStatus = true;
+          } else {
+            // Update previous fall status when no fall is detected
+            previousFallStatus = currentFallStatus;
+          }
         }
       }
     });

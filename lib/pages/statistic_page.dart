@@ -50,7 +50,7 @@ class _StatisticPageState extends State<StatisticPage> {
         // Update the list (add new, remove old if needed)
         setState(() {
           sensorDataPoints.add(newPoint);
-          if (sensorDataPoints.length >= 11) {
+          if (sensorDataPoints.length >= 9) {
             sensorDataPoints.removeAt(0); // Remove oldest point
           }
         });
@@ -78,7 +78,7 @@ class _StatisticPageState extends State<StatisticPage> {
   SideTitles getBottomTitles() {
     return SideTitles(
       showTitles: true,
-      reservedSize: 20,
+      reservedSize: 15,
       interval: 60000, // Show label for each minute
       getTitlesWidget: (value, meta) {
         DateTime date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
@@ -129,11 +129,11 @@ class _StatisticPageState extends State<StatisticPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20), color: beigeColor),
                 child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: LineChart(
                     LineChartData(
-                      minY: 0,
-                      maxY: 0.5,
+                      minY: -2,
+                      maxY: 2,
                       lineBarsData: [
                         LineChartBarData(
                             spots: gyrometerChartData,
@@ -152,8 +152,12 @@ class _StatisticPageState extends State<StatisticPage> {
                           rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false)),
                           leftTitles: const AxisTitles(
-                            axisNameWidget: Text("Gyrometer Values (degree/s)"),
-                            sideTitles: SideTitles(showTitles: true),
+                            axisNameWidget: Text(
+                              "Acceleration Y (m/s^2)",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            sideTitles:
+                                SideTitles(showTitles: true, reservedSize: 40),
                           ),
                           bottomTitles: AxisTitles(
                             axisNameWidget: const Text("Time"),
@@ -170,11 +174,11 @@ class _StatisticPageState extends State<StatisticPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20), color: beigeColor),
                 child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: LineChart(
                     LineChartData(
-                      minY: 0,
-                      maxY: 0.5,
+                      minY: -1.5,
+                      maxY: 1.5,
                       lineBarsData: [
                         LineChartBarData(
                             spots: accelerometerChartData,
@@ -193,9 +197,14 @@ class _StatisticPageState extends State<StatisticPage> {
                           rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false)),
                           leftTitles: const AxisTitles(
-                            axisNameWidget:
-                                Text("Accelerometer Values (m/s^2)"),
-                            sideTitles: SideTitles(showTitles: true),
+                            axisNameWidget: Text(
+                              "Acceleration X (m/s^2)",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                            ),
                           ),
                           bottomTitles: AxisTitles(
                             axisNameWidget: const Text("Time"),
