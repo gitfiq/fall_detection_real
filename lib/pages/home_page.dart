@@ -6,6 +6,7 @@ import 'package:fall_detection_real/pages/about_page.dart';
 import 'package:fall_detection_real/pages/current_status_page.dart';
 import 'package:fall_detection_real/pages/fall_history_page.dart';
 import 'package:fall_detection_real/pages/login_page.dart';
+import 'package:fall_detection_real/pages/settings_page.dart';
 import 'package:fall_detection_real/pages/statistic_page.dart';
 import 'package:fall_detection_real/pages/username_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -95,6 +96,14 @@ class _HomePageState extends State<HomePage> {
                             title: "Set Name",
                             subtitile: "Set nicknames for the device",
                             destination: UsernamePage(
+                              userId: widget.userId,
+                            ),
+                          ),
+                          MenuTile(
+                            icon: Icons.settings_applications_outlined,
+                            title: "Settings",
+                            subtitile: "Adjust the device sensitivity",
+                            destination: SettingsPage(
                               userId: widget.userId,
                             ),
                           ),

@@ -68,6 +68,10 @@ class _AboutPageState extends State<AboutPage> {
                     title: "Set Name",
                     body:
                         "You can assign a name to the device in the 'Set Name Page'. In this page you can assign the a name to the device which will be used for notification purposes. This is to allow better clarification of who's device has detected a fall. \n\n NOTE: If no names have been set, the device ID will be used as an identifier for the fall detected notification."),
+                AboutTile(
+                    title: "Setings",
+                    body:
+                        "You can adjust the sensitivity level of the device in the 'Settings Page'. There will be a slider that you can adjust ranging from low, medium to high sensitivity. This sensitivity is used in the detection of falls. \n\n For example, high sensitivity will detect falls more easily but may detect more false falls. While the low sensitivity will detect more drastic falls and will detect lesser false falls."),
               ],
             ),
           ),

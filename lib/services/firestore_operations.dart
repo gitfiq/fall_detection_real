@@ -267,7 +267,32 @@ class FirestoreOperations {
       print('User input updated successfully for device ID: $deviceId');
     } catch (error) {
       print('Error updating user input: $error');
-      // Handle error appropriately
+    }
+  }
+
+  Future<double> getSensitivity(String deviceId) async {
+    try {
+      DocumentSnapshot documentSnapshot = await users.doc(deviceId).get();
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+        double sensitivity = data['sensitivity']?.toDouble() ?? 2.5;
+        return sensitivity; // Default value if null
+      } else {
+        return 2.5; // Default value if document doesn't exist
+      }
+    } catch (e) {
+      print('Error fetching sensitivity: $e');
+      return 2.5; // Default value on error
+    }
+  }
+
+  Future<void> updateSensitivity(String deviceId, double sensitivity) async {
+    try {
+      await users.doc(deviceId).update({'sensitivity': sensitivity});
+      print('Sensitivity input updated successfully for device ID: $deviceId');
+    } catch (e) {
+      print('Error updating sensitivity: $e');
     }
   }
 }
