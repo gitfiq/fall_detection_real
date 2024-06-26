@@ -6,12 +6,10 @@ class UserId {
 
 class SensorDataPoint {
   final double accelerometer;
-  final double gyrometer;
   final DateTime time;
 
   SensorDataPoint({
     required this.accelerometer,
-    required this.gyrometer,
     required this.time,
   });
 }

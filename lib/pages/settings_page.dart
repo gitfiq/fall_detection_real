@@ -42,9 +42,9 @@ class _SettingsPageState extends State<SettingsPage> {
   };
 
   final Map<double, double> sensitivityLevels = {
-    1.0: 1.2,
-    2.0: 1.5,
-    3.0: 1.9,
+    1.0: 1.7,
+    2.0: 2.2,
+    3.0: 3.0,
   };
 
   Future<void> _fetchSensitivity() async {

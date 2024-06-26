@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:fall_detection_real/data/user_id.dart';
 import 'package:fall_detection_real/pages/current_status_page.dart';
 import 'package:fall_detection_real/pages/fall_history_page.dart';
@@ -43,7 +42,6 @@ class _StatisticPageState extends State<StatisticPage> {
         final data = snapshot.data()!;
         final newPoint = SensorDataPoint(
           accelerometer: data['accelerometer'],
-          gyrometer: data['gyrometer'],
           time: data['time'].toDate(),
         );
 
@@ -57,14 +55,6 @@ class _StatisticPageState extends State<StatisticPage> {
       }
     });
     _isStreamActive = true;
-  }
-
-  //Gets the gyrometer values against the time
-  List<FlSpot> _getgyrometerChartData(List<SensorDataPoint> dataPoints) {
-    return dataPoints.map((point) {
-      double xValue = point.time.millisecondsSinceEpoch.toDouble();
-      return FlSpot(xValue, point.gyrometer.toDouble());
-    }).toList();
   }
 
   //Gets the accelerometer values against the time
@@ -115,7 +105,7 @@ class _StatisticPageState extends State<StatisticPage> {
       if (!_isStreamActive) {
         _listenToSensorData(); // Start listening only once
       }
-      final gyrometerChartData = _getgyrometerChartData(sensorDataPoints);
+
       final accelerometerChartData =
           _getaccelerometerChartData(sensorDataPoints);
 
@@ -124,51 +114,6 @@ class _StatisticPageState extends State<StatisticPage> {
         width: MediaQuery.of(context).size.width * 0.9,
         child: Column(
           children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20), color: beigeColor),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: LineChart(
-                    LineChartData(
-                      minY: -2,
-                      maxY: 2,
-                      lineBarsData: [
-                        LineChartBarData(
-                            spots: gyrometerChartData,
-                            isCurved: true,
-                            barWidth: 3,
-                            color: Colors.green,
-                            preventCurveOverShooting: true,
-                            dotData: const FlDotData(
-                              show: true,
-                            )),
-                      ],
-                      titlesData: FlTitlesData(
-                          topTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          rightTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: false)),
-                          leftTitles: const AxisTitles(
-                            axisNameWidget: Text(
-                              "Acceleration Y (m/s^2)",
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            sideTitles:
-                                SideTitles(showTitles: true, reservedSize: 40),
-                          ),
-                          bottomTitles: AxisTitles(
-                            axisNameWidget: const Text("Time"),
-                            sideTitles: getBottomTitles(),
-                          )),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 50),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -198,7 +143,7 @@ class _StatisticPageState extends State<StatisticPage> {
                               sideTitles: SideTitles(showTitles: false)),
                           leftTitles: const AxisTitles(
                             axisNameWidget: Text(
-                              "Acceleration X (m/s^2)",
+                              " Overall Acceleration (m/s^2)",
                               style: TextStyle(fontSize: 12),
                             ),
                             sideTitles: SideTitles(

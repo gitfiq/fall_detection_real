@@ -42,17 +42,28 @@ class _CurrentStatusPageState extends State<CurrentStatusPage> {
                 var time = (data['time'] as Timestamp).toDate();
                 var formattedTime = DateFormat('dd/MM/yyyy HH:mm').format(time);
                 var location = data['location'];
+                var emergencyStatus = data['emergency'];
 
-                //Pick the image based on the fall status
-                String image = fallStatus
-                    ? 'assets/images/Fall.jpg'
-                    : 'assets/images/Standing.jpg';
+                // Determine the image, status, and background color based on emergency and fall status
+                String image;
+                Color color;
+                String status;
 
-                //Pick the color based on the fall status
-                Color color = fallStatus ? Colors.red : Colors.green;
-
-                //Pick the color based on the fall status
-                String status = fallStatus ? "Fall Detected" : "Ok";
+                if (emergencyStatus) {
+                  image = 'assets/images/Help.jpg';
+                  color = Colors.red;
+                  status = "Needs Help/ Assistance";
+                } else {
+                  if (fallStatus) {
+                    image = 'assets/images/Fall.jpg';
+                    color = Colors.red;
+                    status = "Fall Detected";
+                  } else {
+                    image = 'assets/images/Standing.jpg';
+                    color = Colors.green;
+                    status = "Ok";
+                  }
+                }
 
                 // Display the extracted fields in the UI
                 return Column(

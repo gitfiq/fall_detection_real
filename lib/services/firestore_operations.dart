@@ -49,50 +49,60 @@ class FirestoreOperations {
     );
   }
 
-  void startListeningForFallStatusChanges(String deviceId) {
+  void startListeningForStatusChanges(String deviceId) {
     bool previousFallStatus = false; // Variable to store previous fall_status
+    bool previousEmergencyStatus =
+        false; // Variable to store previous emergency status
 
     users.doc(deviceId).snapshots().listen((snapshot) {
       if (snapshot.exists) {
         var data = snapshot.data() as Map<String, dynamic>?;
         if (data != null) {
+          bool currentEmergencyStatus = data['emergency'] ?? false;
           bool currentFallStatus = data['fall_status'] ?? false;
-          if (currentFallStatus && !previousFallStatus) {
+
+          if (currentEmergencyStatus && !previousEmergencyStatus) {
             users.doc(deviceId).get().then((userDoc) {
               if (userDoc.exists) {
                 String username = userDoc.get('username');
 
                 // Show local notification
-                //Checks if user puts a username already or not
                 if (username.isEmpty) {
-                  //Show notification with deviceID
-                  showNotification('Fall Detected',
-                      'A fall has been detected for device ID $deviceId');
+                  showNotification('Emergency Detected',
+                      'An emergency has been detected for device ID $deviceId');
                 } else {
-                  //Show notification with username
-                  showNotification('Fall Detected',
-                      'A fall has been detected for $username');
+                  showNotification('Emergency Detected',
+                      'An emergency has been detected for $username');
                 }
               }
             });
-            // Update previous fall status after showing the notification
-            previousFallStatus = true;
-          } else {
-            // Update previous fall status when no fall is detected
-            previousFallStatus = currentFallStatus;
+            previousEmergencyStatus = true;
+          } else if (!currentEmergencyStatus) {
+            previousEmergencyStatus = false;
+            if (currentFallStatus && !previousFallStatus) {
+              users.doc(deviceId).get().then((userDoc) {
+                if (userDoc.exists) {
+                  String username = userDoc.get('username');
+
+                  // Show local notification
+                  if (username.isEmpty) {
+                    showNotification('Fall Detected',
+                        'A fall has been detected for device ID $deviceId');
+                  } else {
+                    showNotification('Fall Detected',
+                        'A fall has been detected for $username');
+                  }
+                }
+              });
+              previousFallStatus = true;
+            } else {
+              previousFallStatus = currentFallStatus;
+            }
           }
         }
       }
     });
   }
-
-  //Create instance if Firebase Messaging
-  //final _firebaseMessaging = FirebaseMessaging.instance;
-  // final TwilioFlutter twilioFlutter = TwilioFlutter(
-  //   accountSid: 'ACc7bdd034ea8d53397fc87939be6828a2',
-  //   authToken: 'e63911e255496e14ff92c8cd4eaedc8d',
-  //   twilioNumber: '+12252636312',
-  // );
 
   //function to initialize notification
   Future<void> initNotifications(String deviceId) async {
@@ -102,7 +112,7 @@ class FirestoreOperations {
     await initLocalNotifications();
 
     // Subscribe to fall detection changes
-    startListeningForFallStatusChanges(deviceId);
+    startListeningForStatusChanges(deviceId);
 
     //initialize further settings for push notification
     initPushNotifications();
@@ -111,28 +121,6 @@ class FirestoreOperations {
 
     //Subsribe to the topic of the push notification
     await subscribeToTopic(deviceId);
-
-    // //request permission from user
-    // await _firebaseMessaging.requestPermission();
-    // //fetch FCM token for the device
-    // // ignore: non_constant_identifier_names
-    // final FCMToken = await _firebaseMessaging.getToken();
-    // print("Token: $FCMToken");
-
-    // // Subscribe to falldetect topic if user's unique ID exists
-    // final userDoc = await users.doc(deviceId).get();
-    // if (userDoc.exists) {
-    //   // _startListeningForFallStatusChanges(deviceId);
-    //   // await _firebaseMessaging.subscribeToTopic('detectfall');
-
-    //   //initialize further settings for push notification
-    //   initPushNotifications();
-    //   // Register background message handler
-    //   registerBackgroundMessageHandler();
-    // } else {
-    //   // Handle case where unique ID does not exist
-    //   print('User ID does not exist');
-    // }
   }
 
   //Handle message upon notification
@@ -151,10 +139,7 @@ class FirestoreOperations {
       badge: true,
       sound: true,
     );
-    // //handle notification if app was terminated and now opened
-    // FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
     // //attach event listeners for when a notification opens the app
-    // FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
     FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -175,60 +160,11 @@ class FirestoreOperations {
     handleMessage(message);
   }
 
-  // Future<void> updateFcmToken(String deviceId) async {
-  //   //initialize further settings for push notification
-  //   initPushNotifications();
-  //   // Register background message handler
-  //   registerBackgroundMessageHandler();
-
-  //   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-  //   firebaseMessaging.requestPermission();
-
-  //   final String? fcmToken = await firebaseMessaging.getToken();
-  //   if (fcmToken != null) {
-  //     await users.doc(deviceId).update({'fcm_token': fcmToken});
-  //     print("FCM Token updated: $fcmToken");
-  //   }
-
-  //   await subscribeToTopic(deviceId);
-  // }
-
   // Subscribe to topic
   Future<void> subscribeToTopic(String topic) async {
     await FirebaseMessaging.instance.subscribeToTopic(topic);
     print("Subscribed to topic: $topic");
   }
-
-  // // Listen for changes in the fall_status field
-  // void _startListeningForFallStatusChanges(String deviceId) {
-  //   users.doc(deviceId).snapshots().listen((snapshot) {
-  //     if (snapshot.exists) {
-  //       var data = snapshot.data() as Map<String, dynamic>?;
-  //       if (data != null && data['fall_status'] == true) {
-  //         var phoneNumber = data['phone_number'];
-  //         if (phoneNumber != null) {
-  //           sendSmsNotification(
-  //               phoneNumber, 'Alert: Fall detected! for $deviceId');
-  //         } else {
-  //           print('Phone number is null');
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
-
-  // // Sends SMS
-  // Future<void> sendSmsNotification(String phoneNumber, String message) async {
-  //   try {
-  //     await twilioFlutter.sendSMS(
-  //       toNumber: phoneNumber,
-  //       messageBody: message,
-  //     );
-  //     print('SMS sent to $phoneNumber');
-  //   } catch (error) {
-  //     print('Failed to send SMS: $error');
-  //   }
-  // }
 
   //Stream all the Fall History data from Firestore
   Stream<QuerySnapshot> getFallDocumentsStream(String deviceId) {
@@ -296,3 +232,84 @@ class FirestoreOperations {
     }
   }
 }
+
+// //request permission from user (Inside the InitNotification)
+    // await _firebaseMessaging.requestPermission();
+    // //fetch FCM token for the device
+    // // ignore: non_constant_identifier_names
+    // final FCMToken = await _firebaseMessaging.getToken();
+    // print("Token: $FCMToken");
+
+    // // Subscribe to falldetect topic if user's unique ID exists
+    // final userDoc = await users.doc(deviceId).get();
+    // if (userDoc.exists) {
+    //   // _startListeningForFallStatusChanges(deviceId);
+    //   // await _firebaseMessaging.subscribeToTopic('detectfall');
+
+    //   //initialize further settings for push notification
+    //   initPushNotifications();
+    //   // Register background message handler
+    //   registerBackgroundMessageHandler();
+    // } else {
+    //   // Handle case where unique ID does not exist
+    //   print('User ID does not exist');
+    // }
+
+      // Future<void> updateFcmToken(String deviceId) async {
+  //   //initialize further settings for push notification
+  //   initPushNotifications();
+  //   // Register background message handler
+  //   registerBackgroundMessageHandler();
+
+  //   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  //   firebaseMessaging.requestPermission();
+
+  //   final String? fcmToken = await firebaseMessaging.getToken();
+  //   if (fcmToken != null) {
+  //     await users.doc(deviceId).update({'fcm_token': fcmToken});
+  //     print("FCM Token updated: $fcmToken");
+  //   }
+
+  //   await subscribeToTopic(deviceId);
+  // }
+
+  //Create instance if Firebase Messaging
+  //final _firebaseMessaging = FirebaseMessaging.instance;
+  // final TwilioFlutter twilioFlutter = TwilioFlutter(
+  //   accountSid: 'ACc7bdd034ea8d53397fc87939be6828a2',
+  //   authToken: 'e63911e255496e14ff92c8cd4eaedc8d',
+  //   twilioNumber: '+12252636312',
+  // );
+
+
+    // // Listen for changes in the fall_status field
+  // void _startListeningForFallStatusChanges(String deviceId) {
+  //   users.doc(deviceId).snapshots().listen((snapshot) {
+  //     if (snapshot.exists) {
+  //       var data = snapshot.data() as Map<String, dynamic>?;
+  //       if (data != null && data['fall_status'] == true) {
+  //         var phoneNumber = data['phone_number'];
+  //         if (phoneNumber != null) {
+  //           sendSmsNotification(
+  //               phoneNumber, 'Alert: Fall detected! for $deviceId');
+  //         } else {
+  //           print('Phone number is null');
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
+
+  // // Sends SMS
+  // Future<void> sendSmsNotification(String phoneNumber, String message) async {
+  //   try {
+  //     await twilioFlutter.sendSMS(
+  //       toNumber: phoneNumber,
+  //       messageBody: message,
+  //     );
+  //     print('SMS sent to $phoneNumber');
+  //   } catch (error) {
+  //     print('Failed to send SMS: $error');
+  //   }
+  // }
+
