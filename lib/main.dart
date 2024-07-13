@@ -39,12 +39,13 @@ Future<void> main() async {
       navigatorKey: navigatorKey,
       home: const LoginPage(),
       routes: {
-        '/login': (context) => const LoginPage(),
+        '/login': (context) => const LoginPage(), //Navigate to the Login Page
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/homepage') {
           final userId = settings.arguments as UserId?;
           return MaterialPageRoute(
+            //Navigate to the Homepage
             builder: (context) => HomePage(userId: userId),
           );
         }

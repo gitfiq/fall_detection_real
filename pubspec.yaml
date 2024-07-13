@@ -24,6 +24,8 @@ dependencies:
   permission_handler: ^11.3.1
   http: ^1.2.1
   firebase_auth: ^4.19.6
+  latlong2: ^0.9.1
+  flutter_map: ^7.0.1
 
 dev_dependencies:
   flutter_test:

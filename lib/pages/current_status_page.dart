@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fall_detection_real/components/loading.dart';
 import 'package:fall_detection_real/data/user_id.dart';
 import 'package:fall_detection_real/pages/fall_history_page.dart';
+import 'package:fall_detection_real/pages/location_page.dart';
 import 'package:fall_detection_real/pages/statistic_page.dart';
 import 'package:fall_detection_real/services/firestore_operations.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+//This page mainly serves to show to the user the current status of the device's wearer. (OK, Fall Detected and Emergency)
 class CurrentStatusPage extends StatefulWidget {
   final String deviceId;
 
@@ -40,8 +43,10 @@ class _CurrentStatusPageState extends State<CurrentStatusPage> {
                 // Extract fields from the document data
                 var fallStatus = data['fall_status'];
                 var time = (data['time'] as Timestamp).toDate();
-                var formattedTime = DateFormat('dd/MM/yyyy HH:mm').format(time);
-                var location = data['location'];
+                var formattedTime =
+                    DateFormat('HH:mm, dd/MM/yyyy').format(time);
+                var latitude = data['latitude'];
+                var longitude = data['longitude'];
                 var emergencyStatus = data['emergency'];
 
                 // Determine the image, status, and background color based on emergency and fall status
@@ -112,11 +117,36 @@ class _CurrentStatusPageState extends State<CurrentStatusPage> {
                                 fontSize: 20,
                               )),
                           const SizedBox(height: 30.0),
-                          Text("Location: $location",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 20,
-                              )),
+                          Text.rich(
+                            TextSpan(
+                              children: [
+                                const TextSpan(
+                                  text: "Location: ",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text:
+                                      "$latitude, $longitude", // Assuming latitude & longitude are valid doubles
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => LocationPage(
+                                                deviceId: widget.deviceId)),
+                                      );
+                                    },
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     )

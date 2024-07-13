@@ -2,6 +2,7 @@ import 'package:fall_detection_real/data/user_id.dart';
 import 'package:fall_detection_real/services/firestore_operations.dart';
 import 'package:flutter/material.dart';
 
+//Page wher the user can set the username for the device (Mainly use for better clarity on which device detects a fall)
 class UsernamePage extends StatefulWidget {
   final UserId? userId;
 
@@ -212,7 +213,7 @@ class _UsernamePageState extends State<UsernamePage> {
           SizedBox(
             height: 50,
             width: MediaQuery.of(context).size.width * 0.80,
-            child: ElevatedButton(
+            child: ElevatedButton.icon(
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/homepage',
                     arguments: widget.userId);
@@ -223,7 +224,11 @@ class _UsernamePageState extends State<UsernamePage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: const Text(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              label: const Text(
                 "Back to Menu",
                 style: TextStyle(color: Colors.white),
               ),

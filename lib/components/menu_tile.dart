@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//A reusable tile that is used to make the menu in the Home Page
 class MenuTile extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final icon;

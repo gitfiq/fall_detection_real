@@ -4,6 +4,7 @@ class AboutTile extends StatelessWidget {
   final String title;
   final String body;
 
+  //A reusable tile that is use to make the User Manual in the About Page
   const AboutTile({super.key, required this.title, required this.body});
 
   @override

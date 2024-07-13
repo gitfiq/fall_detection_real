@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:workmanager/workmanager.dart';
 import '../data/user_id.dart';
 
+//The first page the user will go to upon entering the app. The user would need to enter the deviceID to use the apps features
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 

@@ -14,6 +14,7 @@ class FirestoreOperations {
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
 
+  //Getting the instance of the flutter local notification
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -49,6 +50,7 @@ class FirestoreOperations {
     );
   }
 
+  //Listen for emergency and fall status in the Cloud Firestore
   void startListeningForStatusChanges(String deviceId) {
     bool previousFallStatus = false; // Variable to store previous fall_status
     bool previousEmergencyStatus =
@@ -109,17 +111,19 @@ class FirestoreOperations {
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.requestPermission();
 
+    //Initialize the local notifcation
     await initLocalNotifications();
 
-    // Subscribe to fall detection changes
+    //Subscribe to fall detection changes
     startListeningForStatusChanges(deviceId);
 
     //initialize further settings for push notification
     initPushNotifications();
+
     // Register background message handler
     registerBackgroundMessageHandler();
 
-    //Subsribe to the topic of the push notification
+    //Subsribe to the topic of the push notification (Which is the deviceID)
     await subscribeToTopic(deviceId);
   }
 
@@ -195,7 +199,7 @@ class FirestoreOperations {
     }
   }
 
-  // Function to update device name set by user
+  //Update device name set by user
   Future<void> updateUserInput(String deviceId, String userInput) async {
     try {
       // Update the document with the specified device ID
@@ -206,23 +210,25 @@ class FirestoreOperations {
     }
   }
 
+  //Read the sensitivity level of the device in the Cloud Firestore
   Future<double> getSensitivity(String deviceId) async {
     try {
       DocumentSnapshot documentSnapshot = await users.doc(deviceId).get();
       if (documentSnapshot.exists) {
         Map<String, dynamic> data =
             documentSnapshot.data() as Map<String, dynamic>;
-        double sensitivity = data['sensitivity']?.toDouble() ?? 2.5;
+        double sensitivity = data['sensitivity']?.toDouble() ?? 2.2;
         return sensitivity; // Default value if null
       } else {
-        return 2.5; // Default value if document doesn't exist
+        return 2.2; // Default value if document doesn't exist
       }
     } catch (e) {
       print('Error fetching sensitivity: $e');
-      return 2.5; // Default value on error
+      return 2.2; // Default value on error
     }
   }
 
+  //Changes the sensitivity of the device based on the user's preferance
   Future<void> updateSensitivity(String deviceId, double sensitivity) async {
     try {
       await users.doc(deviceId).update({'sensitivity': sensitivity});
@@ -232,6 +238,8 @@ class FirestoreOperations {
     }
   }
 }
+
+//Tried with SMS and Test the FCM
 
 // //request permission from user (Inside the InitNotification)
     // await _firebaseMessaging.requestPermission();

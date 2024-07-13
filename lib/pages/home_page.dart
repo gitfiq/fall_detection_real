@@ -5,6 +5,7 @@ import 'package:fall_detection_real/data/user_id.dart';
 import 'package:fall_detection_real/pages/about_page.dart';
 import 'package:fall_detection_real/pages/current_status_page.dart';
 import 'package:fall_detection_real/pages/fall_history_page.dart';
+import 'package:fall_detection_real/pages/location_page.dart';
 import 'package:fall_detection_real/pages/login_page.dart';
 import 'package:fall_detection_real/pages/settings_page.dart';
 import 'package:fall_detection_real/pages/statistic_page.dart';
@@ -13,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+//This page serves as the main navigation for the application. This is where the user is able to choose any of the features.
 class HomePage extends StatefulWidget {
   final UserId? userId;
 
@@ -90,6 +92,12 @@ class _HomePageState extends State<HomePage> {
                             title: "Activity Level",
                             subtitile: "Check active status of user",
                             destination: StatisticPage(deviceId: '$deviceId'),
+                          ),
+                          MenuTile(
+                            icon: Icons.location_city_outlined,
+                            title: "Location",
+                            subtitile: "Check user's location",
+                            destination: LocationPage(deviceId: '$deviceId'),
                           ),
                           MenuTile(
                             icon: Icons.person_2_outlined,

@@ -4,6 +4,7 @@ import 'package:fall_detection_real/data/user_id.dart';
 import 'package:fall_detection_real/services/firestore_operations.dart';
 import 'package:flutter/material.dart';
 
+//Page where the user is able to control the sensitivity/ threshold of value for the device (To accomodate to different user's preferance)
 class SettingsPage extends StatefulWidget {
   final UserId? userId;
 
@@ -42,9 +43,9 @@ class _SettingsPageState extends State<SettingsPage> {
   };
 
   final Map<double, double> sensitivityLevels = {
-    1.0: 1.7,
-    2.0: 2.2,
-    3.0: 3.0,
+    1.0: 0.75,
+    2.0: 0.65,
+    3.0: 0.55,
   };
 
   Future<void> _fetchSensitivity() async {
@@ -54,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
       setState(() {
         currentSliderValue = sensitivityLevels.entries
             .firstWhere((entry) => entry.value == sensitivity,
-                orElse: () => const MapEntry(2.0, 2.5))
+                orElse: () => const MapEntry(2.0, 0.65))
             .key;
         isLoading = false; // Update loading state
       });
@@ -67,13 +68,8 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  //   double updatedValue = sensitivityLevels[value] ?? 2.5;
-  //   await FirestoreOperations().updateSensitivity(
-  //       deviceId!, updatedValue); // Call the Firestore update function
-  // }
-
   Future<void> saveSensitivityLevel() async {
-    double updatedValue = sensitivityLevels[currentSliderValue] ?? 2.5;
+    double updatedValue = sensitivityLevels[currentSliderValue] ?? 0.65;
     await FirestoreOperations().updateSensitivity(deviceId!, updatedValue);
     showDialog(
       context: context,
@@ -225,7 +221,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     SizedBox(
                       height: 50,
                       width: MediaQuery.of(context).size.width * 0.40,
-                      child: ElevatedButton(
+                      child: ElevatedButton.icon(
                         onPressed: () {
                           Navigator.pushReplacementNamed(context, '/homepage',
                               arguments: widget.userId);
@@ -236,9 +232,13 @@ class _SettingsPageState extends State<SettingsPage> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        child: const Text(
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
                           "Back to Menu",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white, fontSize: 13),
                         ),
                       ),
                     ),
@@ -246,7 +246,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     SizedBox(
                       height: 50,
                       width: MediaQuery.of(context).size.width * 0.40,
-                      child: ElevatedButton(
+                      child: ElevatedButton.icon(
                         onPressed: () {
                           saveSensitivityLevel();
                         },
@@ -256,9 +256,13 @@ class _SettingsPageState extends State<SettingsPage> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        child: const Text(
+                        icon: const Icon(
+                          Icons.save,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
                           "Save",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white, fontSize: 13),
                         ),
                       ),
                     ),

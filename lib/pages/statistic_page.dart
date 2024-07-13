@@ -6,6 +6,7 @@ import 'package:fall_detection_real/services/firestore_operations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+//The statistic/ graph page where the user is able to view the acceleration of the device. (Dips and Spikes may indicate a fall)
 class StatisticPage extends StatefulWidget {
   final String deviceId;
 

@@ -8,6 +8,7 @@ import 'package:fall_detection_real/services/firestore_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+//All past falls are recored in this page (Fall History). In the case of false positive. The user is able to delete the fall record.
 class FallHistoryPage extends StatefulWidget {
   final String deviceId;
 
@@ -63,8 +64,9 @@ class _FallHistoryPageState extends State<FallHistoryPage> {
                       var data = snapshot.data!.docs[index];
                       var time = (data['time'] as Timestamp).toDate();
                       var formattedTime =
-                          DateFormat('dd/MM/yyyy HH:mm').format(time);
-                      var location = data['location'];
+                          DateFormat('HH:mm, dd/MM/yyyy').format(time);
+                      var latitude = data['latitude'];
+                      var longitude = data['longitude'];
                       return Dismissible(
                         key: Key(data.id), // Unique key for each item
                         direction: DismissDirection.endToStart,
@@ -133,7 +135,7 @@ class _FallHistoryPageState extends State<FallHistoryPage> {
                                 ),
                               ),
                               subtitle: Text(
-                                'Location: $location',
+                                'Location: $latitude, $longitude',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w400,

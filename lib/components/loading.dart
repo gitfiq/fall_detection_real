@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+//A custom class to show a loading
 class Loading extends StatefulWidget {
   const Loading({super.key});
 

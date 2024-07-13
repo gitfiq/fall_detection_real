@@ -2,6 +2,7 @@ import 'package:fall_detection_real/components/about_tile.dart';
 import 'package:fall_detection_real/data/user_id.dart';
 import 'package:flutter/material.dart';
 
+//This page explains all the usages of the respective features. This allows the user to better understand how to interpret onn how to use the features
 class AboutPage extends StatefulWidget {
   final UserId? userId;
 
@@ -63,7 +64,11 @@ class _AboutPageState extends State<AboutPage> {
                 AboutTile(
                     title: "Activity Level",
                     body:
-                        "You can check the movements of the user in the 'Active Level Page'. In this page there would be two graphs showng the rotation and movement of the user. Do use this page to check on the user if a fall is detected. \n\n NOTE: If a fall is detected and no movements are shown, a fall has most likely occured. If movements are shown, a fall may not have occured. However still do contact them to check on their status and call an ambulance if necessary. \n\n\n MORE INFORMATION \n\n The 'Activity Level Page' acceleration graphs visually represent your body movements. The Acceleration X graph shows your forward and backward movements, like walking or running, while the Acceleration Y graph displays your up and down movements, such as standing up or sitting down. Normally, when you are walking, the lines on these graphs will have small waves, indicating regular body sway. However, a fall will cause a sudden spike or dip in these graphs due to the quick and significant change in acceleration followed by no/minimal graph changes.  \n\nA spike represents a sudden forward or backward movement, like tripping or stumbling, while a dip signifies a sudden downward movement, like falling to the ground. This visual tool helps you to understand and validate fall detection alerts by recognizing movement patterns in a simple and clear manner."),
+                        "You can check the movements of the user in the 'Active Level Page'. In this page there would be one graph showing the overal accelration of the user. Do use this page to check on the user if a fall is detected. \n\n NOTE: If a fall is detected and no movements are shown, a fall has most likely occured. Whereas if movements are shown, a fall may not have occured. However stil do contact them to check on their status and call an ambulance if necessary. \n\n\n MORE INFORMATION \n\n The 'Activity Level Page' acceleration graph visually represent the body movements. If the graph shows a dip (bends downward) it generally means that the person is either falling or is moving downwards very fast. Whereas if the graph shows a spike (bends upwards) it generally means that the user experience greater force (eg. Just impacted the ground from a fall, or a landed from a jump). \n\n'STEPS to see if a fall is detected'. \n\nWhen a fall detected notification is observesed, check if the graph shows dips followed by spike (large), then most likely a fall has occured"),
+                AboutTile(
+                    title: "Location",
+                    body:
+                        "You can check the location of the user in the 'Location Page'. In this page, there will be 2 types of markers, the RED and BLUE. \n\n The RED marker indicates the current location of the user. While the BLUE marker is all the places where a fall is detected"),
                 AboutTile(
                     title: "Set Name",
                     body:
@@ -79,7 +84,7 @@ class _AboutPageState extends State<AboutPage> {
           SizedBox(
             height: 50,
             width: MediaQuery.of(context).size.width * 0.80,
-            child: ElevatedButton(
+            child: ElevatedButton.icon(
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/homepage',
                     arguments: widget.userId);
@@ -90,7 +95,11 @@ class _AboutPageState extends State<AboutPage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: const Text(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              label: const Text(
                 "Back to Menu",
                 style: TextStyle(color: Colors.white),
               ),
