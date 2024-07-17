@@ -1,5 +1,6 @@
 // ignore_for_file: unused_import, avoid_print, use_build_context_synchronously
 
+import 'package:fall_detection_real/pages/bluetooth_wifi_page.dart';
 import 'package:fall_detection_real/services/call_back_service.dart';
 import 'package:fall_detection_real/services/firestore_operations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -214,6 +215,29 @@ class _LoginPageState extends State<LoginPage>
                           ),
                           child: const Text(
                             "Start Monitoring",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30.0),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.80,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const BluetoothWifiPage()));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue[800],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text(
+                            "Set Wifi Credentials",
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
