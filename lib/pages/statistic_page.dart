@@ -70,7 +70,7 @@ class _StatisticPageState extends State<StatisticPage> {
     return SideTitles(
       showTitles: true,
       reservedSize: 15,
-      interval: 10000, // Show label for each minute
+      interval: 2000, // Show label for each minute
       getTitlesWidget: (value, meta) {
         DateTime date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
         String formattedTime = "${date.hour}:${date.minute}:${date.second}";
