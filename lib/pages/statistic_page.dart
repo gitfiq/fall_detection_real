@@ -123,39 +123,39 @@ class _StatisticPageState extends State<StatisticPage> {
                   padding: const EdgeInsets.all(20.0),
                   child: LineChart(
                     LineChartData(
-                      minY: -1.5,
-                      maxY: 1.5,
                       lineBarsData: [
                         LineChartBarData(
-                            spots: accelerometerChartData,
-                            isCurved: true,
-                            barWidth: 3,
-                            color: Colors.blue,
-                            preventCurveOverShooting: true,
-                            dotData: const FlDotData(
-                              show: true,
-                            )),
+                          spots: accelerometerChartData,
+                          isCurved: true,
+                          barWidth: 3,
+                          color: Colors.blue,
+                          preventCurveOverShooting: true,
+                          dotData: const FlDotData(
+                            show: true,
+                          ),
+                        ),
                       ],
                       titlesData: FlTitlesData(
-                          topTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
+                        topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        leftTitles: const AxisTitles(
+                          axisNameWidget: Text(
+                            " Overall Acceleration (m/s^2)",
+                            style: TextStyle(fontSize: 12),
                           ),
-                          rightTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: false)),
-                          leftTitles: const AxisTitles(
-                            axisNameWidget: Text(
-                              " Overall Acceleration (m/s^2)",
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 40,
-                            ),
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 40,
                           ),
-                          bottomTitles: AxisTitles(
-                            axisNameWidget: const Text("Time"),
-                            sideTitles: getBottomTitles(),
-                          )),
+                        ),
+                        bottomTitles: AxisTitles(
+                          axisNameWidget: const Text("Time"),
+                          sideTitles: getBottomTitles(),
+                        ),
+                      ),
                     ),
                   ),
                 ),
